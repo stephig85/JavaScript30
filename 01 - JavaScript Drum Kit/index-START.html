@@ -6,7 +6,7 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
+<!-- Keycodes obtained through: http://keycode.info/ -->
 
   <div class="keys">
     <div data-key="65" class="key">
@@ -58,7 +58,30 @@
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
 <script>
+// listen for key up event to play a sound on the window, when event fires, run code
+function playSound (e) {
+  const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
+  if(!audio) return; // stops function from running
 
+  audio.currentTime = 0;  // rewind to start of the sound element (removes lag)
+  audio.play();
+
+// add visual animation by targeting class=key from above
+  const key = document.querySelector(`.key[data-key="${e.keyCode}"]`);
+  key.classList.add('playing'); // adds the 'playing' selector to the key class via CSS file
+}
+
+// use transition end event to remove the visual animation
+function removeTransition(e){
+  if (e.propertyName != 'transform') return; // skip it if it's not a transform property
+ console.log(e.propertyName);
+ // use this (which is equal to the key in this case)
+ this.classList.remove('playing');
+}
+
+const keys =document.querySelectorAll('.key');
+keys.forEach(key => key.addEventListener('transitionend', removeTransition));
+window.addEventListener('keydown', playSound);
 </script>
 
 
